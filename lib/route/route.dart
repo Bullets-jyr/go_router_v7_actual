@@ -7,7 +7,13 @@ import 'package:go_router_v7_actual/screen/6_path_param_screen.dart';
 import 'package:go_router_v7_actual/screen/7_query_parameter.dart';
 import 'package:go_router_v7_actual/screen/8_nested_child_screen.dart';
 import 'package:go_router_v7_actual/screen/8_nested_screen.dart';
+import 'package:go_router_v7_actual/screen/9_login_screen.dart';
+import 'package:go_router_v7_actual/screen/9_private_screen.dart';
 import 'package:go_router_v7_actual/screen/root_screen.dart';
+
+// 로그인이 됐는지 안됐는지
+// true - login OK / false - login NO
+bool authState = false;
 
 // http://www.bullets.co.kr -> / -> path
 // http://www.bullets.co.kr/ -> / -> path
@@ -17,6 +23,17 @@ import 'package:go_router_v7_actual/screen/root_screen.dart';
 // /basic/basic_two ->
 // /named
 final router = GoRouter(
+  // state는 GoRouterState.of(context)와 동일합니다.
+  // return String (path) -> 해당 라우트로 이동한다. (path)
+  // return null -> 원래 이동하려던 라우트로 이동한다.
+  // 모든 라우터에 적용이됩니다.
+  redirect: (context, state) {
+    if(state.location == '/login/private' && !authState) {
+      return '/login';
+    }
+
+    return null;
+  },
   routes: [
     GoRoute(
       path: '/',
@@ -105,6 +122,36 @@ final router = GoRouter(
               builder: (_, state) => NestedChildScreen(
                 routeName: '/nested/c',
               ),
+            ),
+          ],
+        ),
+        // /login
+        GoRoute(
+          path: 'login',
+          builder: (_, state) => LoginScreen(),
+          routes: [
+            // /login/private
+            GoRoute(
+              path: 'private',
+              builder: (_, state) => PrivateScreen()
+            ),
+          ],
+        ),
+        GoRoute(
+          path: 'login2',
+          builder: (_, state) => LoginScreen(),
+          routes: [
+            // /login/private
+            GoRoute(
+              path: 'private',
+              builder: (_, state) => PrivateScreen(),
+              // 여기로 이동을 할 때만 적용이됩니다.
+              redirect: (context, state) {
+                if(!authState) {
+                  return 'login2';
+                }
+                return null;
+              }
             ),
           ],
         ),
