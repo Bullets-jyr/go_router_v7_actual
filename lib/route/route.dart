@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:go_router_v7_actual/screen/10_transition_screen_1.dart';
 import 'package:go_router_v7_actual/screen/10_transition_screen_2.dart';
+import 'package:go_router_v7_actual/screen/11_error_screen.dart';
 import 'package:go_router_v7_actual/screen/1_basic_screen.dart';
 import 'package:go_router_v7_actual/screen/3_push_screen.dart';
 import 'package:go_router_v7_actual/screen/4_pop_base_screen.dart';
@@ -165,7 +166,8 @@ final router = GoRouter(
                 transitionDuration: Duration(seconds: 3),
                 // transition animation
                 // animation (이동할 때의 값 0부터 1까지) <> secondaryAnimation (거꾸로 이동할 때의 값)
-                transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) {
                   return FadeTransition(
                     opacity: animation,
                     child: child,
@@ -187,4 +189,7 @@ final router = GoRouter(
       ],
     ),
   ],
+  errorBuilder: (context, state) => ErrorScreen(
+    error: state.error.toString(),
+  ),
 );
